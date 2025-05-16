@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 df = pd.read_excel("AISolutions.xlsx")
 st.set_page_config(layout="wide")
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
-image = Image.open('pic.png')
+image = Image.open('pic.PNG')
 
 col1, col2 = st.columns([0.1,0.9])
 with col1:
