@@ -221,13 +221,25 @@ df['Sales'] = pd.to_numeric(df['Sales'], errors='coerce')
 
 # Replace 0 in 'Sales' with NaN for accurate statistics
 df['Sales'].replace(0, np.nan, inplace=True)
+# Replace 0 with NaN
+df['Sales'] = df['Sales'].replace(0, np.nan)
+
+# Replace NaN with "-"
+df['Sales'] = df['Sales'].fillna("-")
 
 # Compute summary statistics for numeric columns
 summary_stats = df[['Httpstatus', 'Timetaken', 'Sales']].describe().transpose()
 
 # Compute summary statistics for 'DateTime' column
+df['DateTime'] = pd.to_datetime(df['DateTime'], errors='coerce')
+
+# Format 'DateTime' column
+#Remove this
+df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:%M:%S')
 datetime_stats = df['DateTime'].agg(['min', 'max']).to_frame().transpose()
 
+#Remove this
+df.loc[:, 'column'] = df['column'].fillna(value)
 # Combine the statistics
 summary_stats = pd.concat([summary_stats, datetime_stats])
 
