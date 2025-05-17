@@ -227,6 +227,14 @@ summary_stats = df[['Httpstatus', 'Timetaken', 'Sales']].describe().transpose()
 # Compute summary statistics for 'DateTime' column
 datetime_stats = df['DateTime'].agg(['min', 'max']).to_frame().transpose()
 
+#####################################
+# Convert the 'min' column to datetime
+df['min'] = pd.to_datetime(df['min'], errors='coerce')
+
+# Replace 0 in 'Sales' with NaN for accurate statistics
+df['Sales'] = df['Sales'].replace(0, np.nan)
+
+####################################
 # Combine the statistics
 summary_stats = pd.concat([summary_stats, datetime_stats])
 
