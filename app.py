@@ -219,8 +219,7 @@ df['Httpstatus'] = pd.to_numeric(df['Httpstatus'], errors='coerce')
 df['Timetaken'] = pd.to_numeric(df['Timetaken'], errors='coerce')
 df['Sales'] = pd.to_numeric(df['Sales'], errors='coerce')
 
-# Replace 0 in 'Sales' with NaN for accurate statistics
-df['Sales'].replace(0, np.nan, inplace=True)
+df['Sales'] = df['Sales'].replace(0, np.nan)
 
 # Compute summary statistics for numeric columns
 summary_stats = df[['Httpstatus', 'Timetaken', 'Sales']].describe().transpose()
