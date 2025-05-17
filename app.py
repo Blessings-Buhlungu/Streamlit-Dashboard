@@ -243,7 +243,7 @@ summary_stats = pd.concat([summary_stats, datetime_stats])
 
 # Format datetime statistics to remove excessive decimal points
 for col in ['mean', 'min', '25%', '50%', '75%', 'max']:
-    if col in summary_stats1.columns:
+    if col in summary_stats.columns:
         summary_stats[col] = summary_stats[col].apply(
             lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if pd.notnull(x) and isinstance(x, pd.Timestamp) else x
         )
