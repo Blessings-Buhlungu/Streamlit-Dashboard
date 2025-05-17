@@ -237,12 +237,15 @@ datetime_stats = df['datetime'].agg(['min', 'max']).to_frame().transpose()
 # Combine the statistics
 summary_stats = pd.concat([summary_stats_numeric, datetime_stats], axis=0)
 
-# Format datetime statistics to readable string if present
+# Convert 'min' and 'max' columns to datetime if they exist
 for col in ['min', 'max']:
     if col in summary_stats.columns:
-        summary_stats[col] = summary_stats[col].apply(
-            lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if pd.notnull(x) and isinstance(x, pd.Timestamp) else x
-        )
+        summary_stats[col] = pd.to_datetime(summary_stats[col], errors='coerce')
+
+# Format datetime statistics to readable string
+for col in ['min', 'max']:
+    if col in summary_stats.columns:
+        summary_stats[col] = summary_stats[col].dt.strftime('%Y-%m-%d %H:%M:%S')
 
 # Display the results in Streamlit
 col13, _ = st.columns([1, 0.1])  # Adjust the width as needed
