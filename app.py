@@ -211,6 +211,8 @@ with col12:
 st.divider()
 
 
+
+############################
 # Convert 'DateTime' to datetime
 df['DateTime'] = pd.to_datetime(df['DateTime'], errors='coerce')
 ###########################
@@ -237,12 +239,12 @@ datetime_stats = df['datetime'].agg(['min', 'max']).to_frame().transpose()
 
 ####################################
 # Combine the statistics
-summary_stats1 = pd.concat([summary_stats, datetime_stats])
+summary_stats = pd.concat([summary_stats, datetime_stats])
 
 # Format datetime statistics to remove excessive decimal points
 for col in ['mean', 'min', '25%', '50%', '75%', 'max']:
     if col in summary_stats1.columns:
-        summary_stats1[col] = summary_stats1[col].apply(
+        summary_stats[col] = summary_stats[col].apply(
             lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if pd.notnull(x) and isinstance(x, pd.Timestamp) else x
         )
 
@@ -251,7 +253,7 @@ col13, _ = st.columns([1, 0.1])  # Adjust the width as needed
 
 with col13:
     st.markdown("**Summary Statistics for AI Solutions**")
-    st.dataframe(summary_stats1, use_container_width=True)
+    st.dataframe(summary_stats, use_container_width=True)
 
 
 st.divider()
