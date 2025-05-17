@@ -228,6 +228,8 @@ summary_stats = df[['Httpstatus', 'Timetaken', 'Sales']].describe().transpose()
 datetime_stats = df['DateTime'].agg(['min', 'max']).to_frame().transpose()
 
 #####################################
+df.columns = df.columns.str.strip().str.lower()
+
 # Convert the 'min' column to datetime
 df['min'] = pd.to_datetime(df['min'], errors='coerce')
 
