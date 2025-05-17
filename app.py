@@ -213,37 +213,36 @@ st.divider()
 
 # Convert 'DateTime' to datetime
 df['DateTime'] = pd.to_datetime(df['DateTime'], errors='coerce')
-
-# Convert columns to numeric, coercing errors to NaN
-df['Httpstatus'] = pd.to_numeric(df['Httpstatus'], errors='coerce')
-df['Timetaken'] = pd.to_numeric(df['Timetaken'], errors='coerce')
-df['Sales'] = pd.to_numeric(df['Sales'], errors='coerce')
-
-df['Sales'] = df['Sales'].replace(0, np.nan)
-
-# Compute summary statistics for numeric columns
-summary_stats = df[['Httpstatus', 'Timetaken', 'Sales']].describe().transpose()
-
-# Compute summary statistics for 'DateTime' column
-datetime_stats = df['DateTime'].agg(['min', 'max']).to_frame().transpose()
-
-#####################################
+###########################
+# Standardize column names: strip whitespace and convert to lowercase
 df.columns = df.columns.str.strip().str.lower()
 
-# Convert the 'min' column to datetime
-df['min'] = pd.to_datetime(df['min'], errors='coerce')
+# Convert 'datetime' column to datetime format
+df['datetime'] = pd.to_datetime(df['datetime'], errors='coerce')
 
-# Replace 0 in 'Sales' with NaN for accurate statistics
-df['Sales'] = df['Sales'].replace(0, np.nan)
+# Convert specified columns to numeric, coercing errors to NaN
+df['httpstatus'] = pd.to_numeric(df['httpstatus'], errors='coerce')
+df['timetaken'] = pd.to_numeric(df['timetaken'], errors='coerce')
+df['sales'] = pd.to_numeric(df['sales'], errors='coerce')
+
+# Replace 0 in 'sales' with NaN for accurate statistics
+df['sales'] = df['sales'].replace(0, np.nan)
+
+# Compute summary statistics for numeric columns
+summary_stats = df[['httpstatus', 'timetaken', 'sales']].describe().transpose()
+
+# Compute summary statistics for 'datetime' column
+datetime_stats = df['datetime'].agg(['min', 'max']).to_frame().transpose()
+
 
 ####################################
 # Combine the statistics
-summary_stats = pd.concat([summary_stats, datetime_stats])
+summary_stats1 = pd.concat([summary_stats, datetime_stats])
 
 # Format datetime statistics to remove excessive decimal points
 for col in ['mean', 'min', '25%', '50%', '75%', 'max']:
-    if col in summary_stats.columns:
-        summary_stats[col] = summary_stats[col].apply(
+    if col in summary_stats1.columns:
+        summary_stats1[col] = summary_stats1[col].apply(
             lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if pd.notnull(x) and isinstance(x, pd.Timestamp) else x
         )
 
@@ -252,7 +251,7 @@ col13, _ = st.columns([1, 0.1])  # Adjust the width as needed
 
 with col13:
     st.markdown("**Summary Statistics for AI Solutions**")
-    st.dataframe(summary_stats, use_container_width=True)
+    st.dataframe(summary_stats1, use_container_width=True)
 
 
 st.divider()
