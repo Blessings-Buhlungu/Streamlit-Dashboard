@@ -212,10 +212,8 @@ st.divider()
 
 
 
+
 ############################
-# Convert 'DateTime' to datetime
-df['DateTime'] = pd.to_datetime(df['DateTime'], errors='coerce')
-###########################
 # Standardize column names: strip whitespace and convert to lowercase
 df.columns = df.columns.str.strip().str.lower()
 
@@ -231,29 +229,25 @@ df['sales'] = pd.to_numeric(df['sales'], errors='coerce')
 df['sales'] = df['sales'].replace(0, np.nan)
 
 # Compute summary statistics for numeric columns
-summary_stats = df[['httpstatus', 'timetaken', 'sales']].describe().transpose()
+summary_stats_numeric = df[['httpstatus', 'timetaken', 'sales']].describe().transpose()
 
-# Compute summary statistics for 'datetime' column
+# Compute min and max for 'datetime'
 datetime_stats = df['datetime'].agg(['min', 'max']).to_frame().transpose()
 
-
-####################################
 # Combine the statistics
-summary_stats = pd.concat([summary_stats, datetime_stats])
+summary_stats = pd.concat([summary_stats_numeric, datetime_stats], axis=0)
 
-# Format datetime statistics to remove excessive decimal points
-for col in ['mean', 'min', '25%', '50%', '75%', 'max']:
+# Format datetime statistics to readable string if present
+for col in ['min', 'max']:
     if col in summary_stats.columns:
         summary_stats[col] = summary_stats[col].apply(
             lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if pd.notnull(x) and isinstance(x, pd.Timestamp) else x
         )
 
-# Create a new column for summary statistics
+# Display the results in Streamlit
 col13, _ = st.columns([1, 0.1])  # Adjust the width as needed
-
 with col13:
     st.markdown("**Summary Statistics for AI Solutions**")
     st.dataframe(summary_stats, use_container_width=True)
-
 
 st.divider()
