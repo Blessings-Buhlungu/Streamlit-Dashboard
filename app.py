@@ -193,7 +193,7 @@ def main_dashboard():
         return df
     
     df = load_data()
-    image = Image.open('pic.png')
+    image = Image.open('pic.PNG')
 
     # ===== SIDEBAR =====
     with st.sidebar:
